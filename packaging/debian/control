@@ -20,8 +20,13 @@ Package: flameshot
 Architecture: any
 Depends:
  hicolor-icon-theme,
- libqt6svg6 (>= 6.2.0~),
  qt6-qpa-plugins (>= 6.2.0~),
+ libqt6core6 (>= 6.2.0~),
+ libqt6dbus6 (>= 6.2.0~),
+ libqt6gui6 (>= 6.2.0~),
+ libqt6network6 (>= 6.2.0~),
+ libqt6widgets6 (>= 6.2.0~),
+ libqt6svg6 (>= 6.2.0~),
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends:
