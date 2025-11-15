@@ -19,7 +19,6 @@ Vcs-Git: https://github.com/flameshot-org/flameshot.git
 Package: flameshot
 Architecture: any
 Depends:
- ${shlibs:Depends},
  ${misc:Depends},
  hicolor-icon-theme,
  qt6-qpa-plugins (>= 6.2.0~),
