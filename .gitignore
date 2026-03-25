@@ -1,9 +1,4 @@
-# common
-
-.idea
-.cache
 # C++ objects and libs
-
 *.slo
 *.lo
 *.o
@@ -14,8 +9,7 @@
 *.dll
 *.dylib
 
-# Qt-es
-
+# Qt
 /.qmake.cache
 /.qmake.stash
 *.pro.user
@@ -29,9 +23,9 @@ ui_*.h
 Makefile*
 *build-*
 *.qm
+Internationalization.lang
 
 # QtCreator
-
 *.autosave
 
 # QtCtreator Qml
@@ -41,12 +35,9 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user
 
-# python
+# Python
 venv/*
 
-# Created by https://www.gitignore.io/api/snapcraft
-
-### Snapcraft ###
 # Snapcraft
 parts/
 prime/
@@ -56,7 +47,15 @@ stage/
 flameshot*.tar.bz2
 
 .vscode/
+external/
 build/
+release/
+rpm/BUILD/
+rpm/BUILDROOT/
+rpm/*RPMS/
+rpm/SOURCES/
+debug*.list
+elfbins.list
 data/flatpak/.flatpak-builder
 # NVIM
 *~
@@ -66,11 +65,6 @@ data/flatpak/.flatpak-builder
 .run
 
 # MacOS
-.DS_Store
-
-# End of https://www.gitignore.io/api/snapcraft
-
-#MacOS Crap
 .DS_Store
 
 # Miscellaneous

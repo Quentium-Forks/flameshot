@@ -1,0 +1,106 @@
+name: Build Flameshot Application
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build App
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, ubuntu-22.04, ubuntu-22.04-arm]
+        include:
+          - os: ubuntu-24.04
+            codename: noble
+            # qt_version: 6.8
+            # qt_arch: gcc_64
+          - os: ubuntu-24.04-arm
+            codename: noble-arm
+            # qt_version: 6.8
+            # qt_arch: linux_gcc_arm64
+          - os: ubuntu-22.04
+            codename: jammy
+            # qt_version: 6.8
+            # qt_arch: gcc_64
+          - os: ubuntu-22.04-arm
+            codename: jammy-arm
+            # qt_version: 6.8
+            # qt_arch: linux_gcc_arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Update package repositories
+        run: sudo apt-get update
+
+      # - name: Install Qt
+      #   uses: jurplel/install-qt-action@v4
+      #   with:
+      #     version: ${{ matrix.qt_version }}
+      #     target: desktop
+      #     arch: ${{ matrix.qt_arch }}
+      #     modules: qtcharts
+
+      - name: Install libraries
+        run: |
+          sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools libqt6svg6-dev qt6-wayland-dev qt6-wayland-dev libgl1-mesa-dev libxkbcommon-dev libvulkan-dev
+          sudo apt-get install -y libfuse2
+
+      - name: Install libraries for noble
+        if: matrix.codename == 'noble' || matrix.codename == 'noble-arm'
+        run: |
+          sudo apt-get install -y libkdsingleapplication-qt6-dev
+
+      - name: Install build tools
+        run: |
+          sudo apt-get install -y cmake ccache dh-make devscripts build-essential lintian
+
+      - name: Build and make release
+        run: |
+          bash ${{ github.workspace }}/release.sh
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: flameshot-${{ matrix.codename }}
+          path: |
+            ${{ github.workspace }}/release/flameshot_*.deb
+            ${{ github.workspace }}/release/flameshot-*.rpm
+            ${{ github.workspace }}/release/Flameshot-*.AppImage
+
+      - name: Update debian files
+        run: |
+          sed -i "s/^Architecture:\s\+.*$/Architecture: any/g" ${{ github.workspace }}/packaging/debian/control
+
+      - name: Display debian folder
+        run: |
+          echo "Debian folder content:"
+          ls -la ${{ github.workspace }}/packaging/debian/
+          echo "Release folder content:"
+          ls -la ${{ github.workspace }}/release/
+          echo "Control file content:"
+          cat ${{ github.workspace }}/packaging/debian/control
+          echo "Changelog file content:"
+          cat ${{ github.workspace }}/packaging/debian/changelog
+
+      - name: Publish PPA package
+        uses: yuezk/publish-ppa-package@main
+        if: github.event_name != 'workflow_dispatch' && matrix.codename == 'jammy'
+        with:
+          tarball: ${{ github.workspace }}/release/flameshot-*.tar.gz
+          debian_dir: ${{ github.workspace }}/packaging/debian/
+          repository: "quentiumyt/flameshot"
+          deb_email: "pro@quentium.fr"
+          deb_fullname: "Quentin Lienhardt"
+          gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
+          series: "noble jammy"
+          new_version_template: "{VERSION}-{REVISION}+{SERIES}"
+          keep_changelog: true
