@@ -23,3 +23,9 @@ override_dh_auto_configure:
 		-DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
 		-DCMAKE_BUILD_TYPE=Release \
 		$$EXTRA_FLAGS
+
+override_dh_auto_install:
+	dh_auto_install
+	# Remove not required headers, etc.
+	rm -rf debian/flameshot/usr/include
+	rm -rf debian/flameshot/usr/lib
