@@ -13,10 +13,10 @@ Build-Depends:
  libqt6svg6-dev,
  qt6-wayland-dev,
  libkdsingleapplication-qt6-dev <trixie> <forky> <noble> <resolute>,
- libgl1-mesa-dev,
+ libgl-dev,
  libxkbcommon-dev,
  libvulkan-dev,
-Standards-Version: 4.7.3
+Standards-Version: 4.7.4
 Rules-Requires-Root: no
 Vcs-Browser: https://github.com/flameshot-org/flameshot
 Vcs-Git: https://github.com/flameshot-org/flameshot.git
