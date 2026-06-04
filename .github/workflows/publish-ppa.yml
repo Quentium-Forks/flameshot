@@ -91,7 +91,7 @@ jobs:
           cat ${{ github.workspace }}/packaging/debian/changelog
 
       - name: Publish PPA package
-        uses: yuezk/publish-ppa-package@main
+        uses: Quentium-Forks/publish-ppa-package@main
         if: github.event_name != 'workflow_dispatch' && matrix.codename == 'jammy'
         with:
           tarball: ${{ github.workspace }}/release/flameshot-*.tar.gz
@@ -101,6 +101,6 @@ jobs:
           deb_fullname: "Quentin Lienhardt"
           gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
           gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
-          series: "noble jammy"
+          series: "jammy noble resolute"
           new_version_template: "{VERSION}-{REVISION}+{SERIES}"
           keep_changelog: true
