@@ -61,6 +61,15 @@ private slots:
     void setJpegQuality(int v);
     void setReverseArrow(bool checked);
     void setInsecurePixelate(bool checked);
+#if !defined(Q_OS_MACOS)
+    void captureActiveMonitorChanged(bool checked);
+#endif
+#if defined(Q_OS_MACOS)
+    void useNativeFullscreenChanged(bool checked);
+#endif
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    void useX11LegacyScreenshotChanged(bool checked);
+#endif
 
 private:
     const QString chooseFolder(const QString& currentPath = "");
@@ -99,6 +108,15 @@ private:
     void initJpegQuality();
     void initReverseArrow();
     void initInsecurePixelate();
+#if !defined(Q_OS_MACOS)
+    void initCaptureActiveMonitor();
+#endif
+#if defined(Q_OS_MACOS)
+    void initUseNativeFullscreen();
+#endif
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    void initUseX11LegacyScreenshot();
+#endif
 
     void _updateComponents(bool allowEmptySavePath);
 
@@ -147,4 +165,13 @@ private:
     QSpinBox* m_jpegQuality;
     QCheckBox* m_reverseArrow;
     QCheckBox* m_insecurePixelate;
+#if !defined(Q_OS_MACOS)
+    QCheckBox* m_captureActiveMonitor;
+#endif
+#if defined(Q_OS_MACOS)
+    QCheckBox* m_useNativeFullscreen;
+#endif
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    QCheckBox* m_useX11LegacyScreenshot;
+#endif
 };
