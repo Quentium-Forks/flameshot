@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=13.3.0.0
+VERSION=14.0.0.0
 DIR=flameshot-$VERSION
 ARCH=$(uname -m)
 ARCH_DPKG=$(dpkg --print-architecture)

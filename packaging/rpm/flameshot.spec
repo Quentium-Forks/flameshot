@@ -1,5 +1,5 @@
 Name:    flameshot
-Version: 14.0.0
+Version: 14.0.0.0
 Release: 1%{?dist}
 Summary: Powerful yet simple to use screenshot software
 
@@ -140,11 +140,8 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_mandir}/man1/%{name}.1*
 
 %changelog
-* Mon May 18 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.rc2
-- Beta for 14 release
-
-* Mon Mar 02 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.rc1
-- Beta for 14 release
+* Mon Jun 08 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.0
+- Updated for v14.0.0 release
 
 * Tue Oct 28 2025 Jeremy Borgman <borgman.jeremy@pm.me> - 13.3.0
 - Updated for v13.3.0 release
