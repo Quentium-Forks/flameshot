@@ -21,7 +21,6 @@ override_dh_auto_configure:
 	# This is required to use CMake FetchContent \
 	dh_auto_configure -- \
 		-DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
-		-DCMAKE_BUILD_TYPE=Release \
 		$$EXTRA_FLAGS
 
 override_dh_auto_install:
