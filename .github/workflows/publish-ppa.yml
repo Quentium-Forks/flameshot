@@ -11,23 +11,33 @@ jobs:
     name: Build App
     strategy:
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm, ubuntu-22.04, ubuntu-22.04-arm]
+        os:
+          [
+            ubuntu-26.04,
+            ubuntu-26.04-arm,
+            ubuntu-24.04,
+            ubuntu-24.04-arm,
+            ubuntu-22.04,
+            ubuntu-22.04-arm,
+          ]
         include:
+          - os: ubuntu-26.04
+            codename: resolute
+            # qt_arch: gcc_64
+          - os: ubuntu-26.04-arm
+            codename: resolute-arm
+            # qt_arch: linux_gcc_arm64
           - os: ubuntu-24.04
             codename: noble
-            # qt_version: 6.8
             # qt_arch: gcc_64
           - os: ubuntu-24.04-arm
             codename: noble-arm
-            # qt_version: 6.8
             # qt_arch: linux_gcc_arm64
           - os: ubuntu-22.04
             codename: jammy
-            # qt_version: 6.8
             # qt_arch: gcc_64
           - os: ubuntu-22.04-arm
             codename: jammy-arm
-            # qt_version: 6.8
             # qt_arch: linux_gcc_arm64
     runs-on: ${{ matrix.os }}
     steps:
@@ -44,9 +54,7 @@ jobs:
       #   uses: jurplel/install-qt-action@v4
       #   with:
       #     version: ${{ matrix.qt_version }}
-      #     target: desktop
       #     arch: ${{ matrix.qt_arch }}
-      #     modules: qtcharts
 
       - name: Install libraries
         run: |
@@ -54,13 +62,13 @@ jobs:
           sudo apt-get install -y libfuse2
 
       - name: Install libraries for noble
-        if: matrix.codename == 'noble' || matrix.codename == 'noble-arm'
+        if: matrix.codename == 'noble' || matrix.codename == 'noble-arm' || matrix.codename == 'resolute' || matrix.codename == 'resolute-arm'
         run: |
           sudo apt-get install -y libkdsingleapplication-qt6-dev
 
       - name: Install build tools
         run: |
-          sudo apt-get install -y cmake ccache dh-make devscripts build-essential lintian
+          sudo apt-get install -y cmake ccache dh-make devscripts build-essential lintian elfutils
 
       - name: Build and make release
         run: |
