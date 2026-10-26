@@ -5,7 +5,7 @@ Source: https://github.com/flameshot-org/flameshot
 
 Files: *
 Copyright: 2016-2019 lupoDharkael <izhe@hotmail.es>
-License: GPL-3+
+License: GPL-3.0-or-later
 Comment:
  The author copied a few lines of code from KSnapshot regiongrabber.cpp
  revision 796531 (LGPL).
@@ -13,7 +13,7 @@ Comment:
 Files: debian/*
 Copyright: 2017 Juanma Navarro Mañez <juanma1980@gmail.com>
            2018 Boyuan Yang <byang@debian.org>
-License: GPL-3+
+License: GPL-3.0-or-later
 
 Files:
  data/img/app/flameshot.*
@@ -36,9 +36,9 @@ Files: src/widgets/capture/capturewidget.*
 Copyright: 2017 Alejandro Sirgo Rica
            2017 Christian Kaiser <info@ckaiser.com.ar>
            2007 Luca Gugelmann <lucag@student.ethz.ch>
-License: GPL-3+
+License: GPL-3.0-or-later
 Comment:
- Relicensed under GPL-3+ under flameshot project.
+ Relicensed under GPL-3.0-or-later under flameshot project.
  .
  Originally based on Lightscreen areadialog.h,
  Copyright 2017  Christian Kaiser <info@ckaiser.com.ar>
@@ -54,7 +54,7 @@ License: Expat
 
 Files: build/_deps/qtcolorwidgets-src/*
 Copyright: 2013-2017 Mattia Basaglia <mattia.basaglia@gmail.com>
-License: LGPL-3+
+License: LGPL-3.0-or-later
 Comment:
  As a special exception, this library can be included in any project under the
  terms of any of the GNU licenses, distributing the whole project under a
@@ -75,7 +75,7 @@ Comment:
  exception to your version of the library, but you are not obliged to do so.
  If you do not wish to do so, delete this exception statement from your version.
 
-License: LGPL-3+
+License: LGPL-3.0-or-later
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Lesser Public License as published
  by the Free Software Foundation, either version 3 of the License, or
@@ -369,7 +369,7 @@ License: Free-Art-License-1.3
      Translation : Jonathan Clarke, Benjamin Jean, Griselda Jung, Fanny
      Mourguet, Antoine Pitrou.  Thanks to framalang.org
 
-License: GPL-3+
+License: GPL-3.0-or-later
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
