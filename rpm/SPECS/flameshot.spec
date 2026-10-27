@@ -3,7 +3,7 @@ Version:    14.0.0.0
 Release:    1%{?dist}
 Summary:    Powerful yet simple to use screenshot software
 
-License:    GPLv3+
+License:    GPL-3.0-or-later
 URL:        https://flameshot.org/
 Source0:    %{name}-%{version}.tar.gz
 

@@ -13,6 +13,7 @@ Comment:
 Files: debian/*
 Copyright: 2017 Juanma Navarro Mañez <juanma1980@gmail.com>
            2018 Boyuan Yang <byang@debian.org>
+           2026 Quentin Lienhardt <pro@quentium.fr>
 License: GPL-3.0-or-later
 
 Files:
