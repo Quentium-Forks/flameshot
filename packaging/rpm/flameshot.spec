@@ -1,5 +1,5 @@
 Name:    flameshot
-Version: 14.0.0.0
+Version: 15.0.0
 Release: 1%{?dist}
 Summary: Powerful yet simple to use screenshot software
 
@@ -44,7 +44,11 @@ Requires: hicolor-icon-theme
 %if 0%{?suse_version}
 Requires: qt6-svg
 %else
+%if 0%{?fedora} || 0%{?rhel}
+Requires: qt6-qtsvg%{?_isa}
+%else
 Requires: qt6-svg%{?_isa}
+%endif
 %endif
 
 %if 0%{?suse_version}
@@ -140,8 +144,20 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_mandir}/man1/%{name}.1*
 
 %changelog
-* Mon Jun 08 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.0
-- Updated for v14.0.0 release
+* Sun Nov 01 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 15.0.0
+- Updated for v15.0.0 release
+
+* Fri Oct 30 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 15.0.rc2
+- Beta for 15 release
+
+* Sat Sep 12 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 15.0.rc1
+- Beta for 15 release
+
+* Mon May 18 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.rc2
+- Beta for 14 release
+
+* Mon Mar 02 2026 Jeremy Borgman <borgman.jeremy@pm.me> - 14.0.rc1
+- Beta for 14 release
 
 * Tue Oct 28 2025 Jeremy Borgman <borgman.jeremy@pm.me> - 13.3.0
 - Updated for v13.3.0 release

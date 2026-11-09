@@ -45,6 +45,8 @@
 
 #define MOUSE_DISTANCE_TO_START_MOVING 3
 
+auto const MOUSE_WHEEL_TRESHOLD = 60;
+
 // CaptureWidget is the main component used to capture the screen. It contains
 // an area of selection with its respective buttons.
 
@@ -198,6 +200,7 @@ CaptureWidget::CaptureWidget(const CaptureRequest& req,
         if (selectedScreen != nullptr && windowHandle()) {
             windowHandle()->setScreen(selectedScreen);
         }
+        m_selectedScreen = selectedScreen;
 #endif
     }
 
@@ -261,7 +264,6 @@ CaptureWidget::CaptureWidget(const CaptureRequest& req,
         updateCursor();
         m_toolSizeByKeyboard = 0;
         onToolSizeChanged(m_context.toolSize);
-        onToolSizeSettled(m_context.toolSize);
     });
 
     m_config.checkAndHandleError();
@@ -834,11 +836,6 @@ bool CaptureWidget::startDrawObjectTool(const QPoint& pos)
 
         m_context.mousePos = m_displayGrid ? snapToGrid(pos) : pos;
         m_activeTool->drawStart(m_context);
-        // TODO this is the wrong place to do this
-
-        if (m_activeTool->type() == CaptureTool::TYPE_CIRCLECOUNT) {
-            m_activeTool->setCount(m_context.circleCount++);
-        }
 
         return true;
     }
@@ -1145,12 +1142,16 @@ void CaptureWidget::wheelEvent(QWheelEvent* e)
      * not accept events faster that one in 200ms.
      * */
     int toolSizeOffset = 0;
-    if (e->angleDelta().y() >= 60) {
-        // mouse scroll (wheel) increment
-        toolSizeOffset = 1;
-    } else if (e->angleDelta().y() <= -60) {
-        // mouse scroll (wheel) decrement
-        toolSizeOffset = -1;
+    if (qAbs(e->angleDelta().y()) >= MOUSE_WHEEL_TRESHOLD) {
+        auto const delta =
+          qMax(qMin(e->angleDelta().y() / MOUSE_WHEEL_TRESHOLD, 1), -1);
+        if (activeButtonTool() &&
+            activeButtonTool()->handleMouseWheelEvent(
+              delta, m_adjustmentButtonPressed, m_context)) {
+            this->repaint();
+            return;
+        }
+        toolSizeOffset = delta;
     } else {
         // touchpad scroll
         qint64 current = QDateTime::currentMSecsSinceEpoch();
@@ -1183,6 +1184,13 @@ void CaptureWidget::moveEvent(QMoveEvent* e)
 {
     QWidget::moveEvent(e);
     m_context.widgetOffset = mapToGlobal(QPoint(0, 0));
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    // If a compositor moved the window to the wrong screen, move it back
+    if (m_context.fullscreen && m_selectedScreen &&
+        geometry().topLeft() != m_selectedScreen->geometry().topLeft()) {
+        move(m_selectedScreen->geometry().topLeft());
+    }
+#endif
 }
 
 void CaptureWidget::changeEvent(QEvent* e)
@@ -1493,6 +1501,18 @@ void CaptureWidget::handleToolSignal(CaptureTool::Request r)
         case CaptureTool::REQ_DECREASE_TOOL_SIZE:
             setToolSize(m_context.toolSize - 1);
             break;
+        case CaptureTool::REQ_COMMIT_CURRENT_TOOL: {
+            const bool editingExistingTool =
+              m_activeTool && m_activeTool->editMode();
+            if (commitCurrentTool()) {
+                if (editingExistingTool) {
+                    m_panel->setToolWidget(nullptr);
+                }
+                drawToolsData();
+                updateLayersPanel();
+            }
+            break;
+        }
         default:
             break;
     }
@@ -1507,6 +1527,14 @@ void CaptureWidget::onToolSizeChanged(int t)
 {
 
     m_context.toolSize = t;
+
+    // Persist the new size straight away. This was previously deferred until
+    // the NotifierBox finished hiding, which meant a size set from the side
+    // panel was never saved at all, since that path never shows the notifier,
+    // and a size set with the wheel or the keyboard was lost whenever the
+    // capture was completed before the notifier's timeout had elapsed.
+    m_config.setToolSize(activeButtonToolType(), t);
+
     CaptureTool* tool = activeButtonTool();
     if (tool && tool->showMousePreview()) {
         setCursor(Qt::BlankCursor);
@@ -1533,11 +1561,6 @@ void CaptureWidget::onToolSizeChanged(int t)
 
     // Force a repaint to prevent artifacting
     this->repaint();
-}
-
-void CaptureWidget::onToolSizeSettled(int size)
-{
-    m_config.setToolSize(activeButtonToolType(), size);
 }
 
 void CaptureWidget::setDrawColor(const QColor& c)

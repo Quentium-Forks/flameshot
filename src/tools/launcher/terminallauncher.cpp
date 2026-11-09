@@ -22,6 +22,17 @@ static const TerminalApp terminalApps[] = {
     { "Eterm", "-e" },
     { "rxvt", "-e" },
     { "urxvt", "-e" },
+    { "ptyxis", "--" },
+    { "kgx", "-e" },
+    { "mate-terminal", "-x" },
+    { "qterminal", "-e" },
+    { "lxterminal", "-e" },
+    { "ghostty", "-e" },
+    { "kitty", "-e" },
+    { "alacritty", "-e" },
+    { "foot", "-e" },
+    { "wezterm", "-e" },
+    { "st", "-e" },
 };
 }
 
@@ -42,8 +53,12 @@ TerminalApp TerminalLauncher::getPreferedTerminal()
     return res;
 }
 
-bool TerminalLauncher::launchDetached(const QString& command)
+bool TerminalLauncher::launchDetached(const QStringList& args)
 {
     TerminalApp app = getPreferedTerminal();
-    return QProcess::startDetached(app.name, { app.arg, command });
+    if (app.name.isEmpty())
+        return false;
+    QStringList termArgs = { app.arg };
+    termArgs.append(args);
+    return QProcess::startDetached(app.name, termArgs);
 }

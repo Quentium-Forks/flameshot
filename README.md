@@ -57,6 +57,9 @@
 
 - [Features](#features)
 - [Usage](#usage)
+  - [Usage on Windows](#usage-on-windows)
+  - [Usage on Hyprland / Sway / wlroots](#usage-on-hyprland--sway--wlroots)
+  - [Usage on minimal X11 window managers](#usage-on-minimal-x11-window-managers)
   - [CLI configuration](#cli-configuration)
   - [Config file](#config-file)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
@@ -160,6 +163,14 @@ but it will not output any text to the console. This is problematic if, for exam
 running `flameshot.exe -h`.
 
 If you require console output, run `flameshot-cli.exe` instead. `flameshot-cli.exe` is a minimal wrapper around `flameshot.exe` that ensures all stdout is captured and output to the console.
+
+### Usage on Hyprland / Sway / wlroots
+
+Please [refer to this document](docs/UsageHyprlandSwayWlroots.md) for detailed instructions on how to set up Flameshot on Hyprland, Sway, and wlroots-based Wayland compositors.
+
+### Usage on minimal X11 window managers
+
+On minimal X11 window managers (i3, dwm, xmonad, bspwm, ...), capturing may fail because no portal backend implements the Screenshot interface (errors such as *"Could not locate the org.freedesktop.portal.Desktop service"* or *"Screenshot portal timed out"*). Please [refer to this document](docs/UsageX11MinimalWM.md) for the fix (enabling the legacy X11 capture).
 
 ### CLI configuration
 
@@ -331,7 +342,7 @@ Now every time you press <kbd>Prt Sc</kbd> it will start Flameshot GUI instead o
 
 - Press <kbd>Enter</kbd> or <kbd>Ctrl</kbd> + <kbd>C</kbd> when you are in a capture mode and you don't have an active selection and the whole desktop will be copied to your clipboard. Pressing <kbd>Ctrl</kbd> + <kbd>S</kbd> will save your capture to a file. Check the [Shortcuts](#keyboard-shortcuts) for more information.
 
-- Flameshot works best with a desktop environment that includes D-Bus. See this [article](https://wiki.archlinux.org/index.php/Flameshot#Troubleshooting) for tips on using Flameshot in a minimal window manager (dwm, i3, xmonad, etc).
+- Flameshot works best with a desktop environment that includes D-Bus. See this [article](https://wiki.archlinux.org/title/Flameshot#Troubleshooting) for tips on using Flameshot in a minimal window manager (dwm, i3, xmonad, etc).
 
 - In order to speed up the first launch of Flameshot (D-Bus init of the app can be slow), consider starting the application automatically on boot.
     - Quick tip: If you don't have Flameshot to autostart at boot and you want to set keyboard shortcut, use the following as the command for the keybinding:
@@ -371,7 +382,12 @@ There are packages available in the repository of some Linux distributions:
 ### macOS
 
 - [MacPorts](https://www.macports.org): `sudo port selfupdate && sudo port install flameshot`
-- [Homebrew](https://brew.sh): `brew install --cask flameshot`
+- Homebrew:
+```
+brew tap flameshot-org/flameshot
+brew trust --cask flameshot-org/flameshot/flameshot-org-flameshot
+brew install  flameshot-org-flameshot
+```
 
 **Note** that because of macOS security features, you may not be able to open flameshot when installed using brew.
 If you see the message `“flameshot” cannot be opened because the developer cannot be verified.` you will need to
@@ -399,7 +415,7 @@ After following all those steps above, `flameshot` will open without problems in
 
 ### Tray icon
 
-**Note** that for the Flameshot icon to appear in your tray area, you should have a systray software installed. This is especially true for users who use minimal [window managers](https://wiki.archlinux.org/index.php/window_manager) such as [dwm](https://dwm.suckless.org/). In some [Desktop Environment](https://wiki.archlinux.org/index.php/Desktop_environment) installations (e.g Gnome), the systray might be missing and you can install an application or plugin (e.g [Gnome shell extension](https://extensions.gnome.org/extension/1503/tray-icons/)) to add the systray to your setup. It has been [reported](https://github.com/flameshot-org/flameshot/issues/1009#issuecomment-700781081)) that icon of some software, including Flameshot, does not show in [gnome-shell-extension-appindicator](https://github.com/ubuntu/gnome-shell-extension-appindicator).
+**Note** that for the Flameshot icon to appear in your tray area, you should have a systray software installed. This is especially true for users who use minimal [window managers](https://wiki.archlinux.org/title/window_manager) such as [dwm](https://dwm.suckless.org/). In some [Desktop Environment](https://wiki.archlinux.org/title/Desktop_environment) installations (e.g Gnome), the systray might be missing and you can install an application or plugin (e.g [Gnome shell extension](https://extensions.gnome.org/extension/1503/tray-icons/)) to add the systray to your setup. It has been [reported](https://github.com/flameshot-org/flameshot/issues/1009#issuecomment-700781081)) that icon of some software, including Flameshot, does not show in [gnome-shell-extension-appindicator](https://github.com/ubuntu/gnome-shell-extension-appindicator).
 
 
 Alternatively, in case you don't want to have a systray, you can always call Flameshot from the terminal. See [Usage section](#usage).

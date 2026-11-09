@@ -37,11 +37,29 @@ void setActivationPolicyAccessory()
 
 constexpr const char* visibleInDockProperty = "_visibleInDock";
 
+// NSMainMenuWindowLevel (24) + 2: above the menu bar, its status items and
+// the Dock, but below pop-up menus so Qt menus remain visible.
+constexpr long captureWindowLevel = 26;
+
+// Qt::WindowStaysOnTopHint maps to NSFloatingWindowLevel, which is below the
+// menu bar and the Dock, so they would cover parts of the capture overlay.
+void raiseAboveMenuBar(QWidget* widget)
+{
+    auto getWindow = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend);
+    auto setLevel = reinterpret_cast<void (*)(id, SEL, long)>(objc_msgSend);
+    auto nsView = reinterpret_cast<id>(widget->winId());
+    id nsWindow = getWindow(nsView, sel_registerName("window"));
+    if (nsWindow != nullptr) {
+        setLevel(nsWindow, sel_registerName("setLevel:"), captureWindowLevel);
+    }
+}
+
 } // namespace
 
 #include <CoreGraphics/CoreGraphics.h>
 #endif
 
+#include "config/cacheutils.h"
 #include "config/configresolver.h"
 #include "config/configwindow.h"
 #include "core/qguiappcurrentscreen.h"
@@ -125,6 +143,13 @@ CaptureWidget* Flameshot::gui(const CaptureRequest& req)
         return nullptr;
     }
 
+    CaptureRequest request = req;
+    if (request.captureMode() == CaptureRequest::GRAPHICAL_MODE &&
+        request.initialSelection().isNull() &&
+        ConfigHandler().saveLastRegion()) {
+        request.setInitialSelection(getLastRegion());
+    }
+
 #if defined(Q_OS_MACOS)
     // This is required on MacOS because of Mission Control. If you'll switch to
     // another Desktop you cannot take a new screenshot from the tray, you have
@@ -157,7 +182,7 @@ CaptureWidget* Flameshot::gui(const CaptureRequest& req)
             return nullptr;
         }
 
-        m_captureWindow = new CaptureWidget(req);
+        m_captureWindow = new CaptureWidget(request);
 
 #ifdef Q_OS_WIN
         m_captureWindow->show();
@@ -166,6 +191,7 @@ CaptureWidget* Flameshot::gui(const CaptureRequest& req)
             m_captureWindow->showFullScreen();
         } else {
             m_captureWindow->show();
+            raiseAboveMenuBar(m_captureWindow);
         }
         m_captureWindow->activateWindow();
         m_captureWindow->raise();
